@@ -54,7 +54,7 @@ public:
      */
     virtual ~BitmapMemoryManager() = default;
 
-    virtual void *alloc(uint32_t size);
+    virtual void *alloc();
 
     virtual void free(void *ptr);
 

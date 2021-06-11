@@ -171,7 +171,7 @@ void Management::init() {
     // Physical Page Frame Allocator is initialized to be possible to allocate
     // physical memory (page frames)
     calcTotalPhysicalMemory();
-    pageFrameAllocator = new PageFrameAllocator(0, totalPhysMemory);
+    pageFrameAllocator = new PageFrameAllocator(0, totalPhysMemory - 1);
 
     // to be able to map new pages, a bootstrap address space is created.
     // It uses only the basePageDirectory with mapping for kernel space
@@ -206,7 +206,7 @@ void Management::init() {
 
 void Management::map(uint32_t virtAddress, uint16_t flags) {
     // allocate a physical page frame where the page should be mapped
-    uint32_t physAddress = (uint32_t) pageFrameAllocator->alloc(PAGESIZE);
+    uint32_t physAddress = (uint32_t) pageFrameAllocator->alloc();
     // map the page into the directory
     currentAddressSpace->getPageDirectory()->map(physAddress, virtAddress, flags);
 }
@@ -233,7 +233,7 @@ void Management::map(uint32_t virtStartAddress, uint32_t virtEndAddress, uint16_
 
 uint32_t Management::createPageTable(PageDirectory *dir, uint32_t idx) {
     // get some virtual memory for the table
-    void *virtAddress = pagingAreaManager->alloc(PAGESIZE);
+    void *virtAddress = pagingAreaManager->alloc();
     // get physical memory for the table
     void *physAddress = getPhysicalAddress(virtAddress);
     // there must be no mapping from virtual to physical address be done here,
@@ -306,12 +306,13 @@ uint32_t Management::unmap(uint32_t virtStartAddress, uint32_t virtEndAddress) {
 }
 
 void *Management::mapIO(uint32_t physAddress, uint32_t size) {
+    // TODO: Get rid of old IOMemoryManager
     // get amount of needed pages
     uint32_t pageCnt = size / PAGESIZE;
     pageCnt += (size % PAGESIZE == 0) ? 0 : 1;
 
     // allocate 4KB-aligned virtual IO-memory
-    void *virtStartAddress = ioMemManager->alloc(size);
+    void *virtStartAddress = ioMemManager->alloc();
 
     // Check for nullpointer
     if (virtStartAddress == nullptr) {
@@ -342,10 +343,10 @@ void *Management::mapIO(uint32_t size) {
     pageCnt += (size % PAGESIZE == 0) ? 0 : 1;
 
     // allocate block of physical memory
-    void *physStartAddress = pageFrameAllocator->alloc(size);
+    void *physStartAddress = pageFrameAllocator->alloc();
 
     // allocate 4KB-aligned virtual IO-memory
-    void *virtStartAddress = ioMemManager->alloc(size);
+    void *virtStartAddress = ioMemManager->alloc();
 
     // check for nullpointer
     if (virtStartAddress == nullptr) {
@@ -398,7 +399,7 @@ void Management::calcTotalPhysicalMemory() {
             continue;
         }
 
-        if (entry.length > maxEntry.length) {
+        if (entry.address + entry.length > maxEntry.address + maxEntry.length) {
             maxEntry = entry;
         }
     }
@@ -407,7 +408,7 @@ void Management::calcTotalPhysicalMemory() {
         Util::Exception::throwException(Util::Exception::ILLEGAL_STATE, "No usable memory found!");
     }
 
-    totalPhysMemory = static_cast<uint32_t>(maxEntry.length);
+    totalPhysMemory = static_cast<uint32_t>(maxEntry.address + maxEntry.length);
 
     // if there is more than 3,75GB memory apply a cap
     /*if (totalPhysMemory > PHYS_MEM_CAP) {
@@ -451,7 +452,7 @@ void Management::removeAddressSpace(VirtualAddressSpace *addressSpace) {
 }
 
 void *Management::allocPageTable() {
-    return pagingAreaManager->alloc(PAGESIZE);
+    return pagingAreaManager->alloc();
 }
 
 void Management::freePageTable(void *virtTableAddress) {

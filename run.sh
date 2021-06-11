@@ -8,7 +8,7 @@ readonly CONST_QEMU_MIN_BIOS_CPU="486"
 readonly CONST_QEMU_MIN_EFI_CPU="pentium2"
 readonly CONST_QEMU_DEFAULT_RAM="64M"
 readonly CONST_QEMU_BIOS_PC=""
-readonly CONST_QEMU_BIOS_EFI="${OVMF:-/usr/share/edk2-ovmf/ia32/OVMF.fd}"
+readonly CONST_QEMU_BIOS_EFI="${OVMF:-/usr/share/ovmf/ia32/OVMF.fd}"
 readonly CONST_QEMU_DEFAULT_BOOT_DEVICE="-drive driver=raw,node-name=disk,file.driver=file,file.filename=hhuOS.img"
 readonly CONST_QEMU_ARGS="-vga std -monitor stdio"
 

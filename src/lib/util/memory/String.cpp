@@ -510,6 +510,9 @@ String String::vformat(const char *format, va_list args) {
                 case 'b':
                     writer << Stream::PrintWriter::bin << va_arg(args, uint32_t);
                     break;
+                case 'B':
+                    writer << static_cast<bool>(va_arg(args, uint32_t));
+                    break;
                 default:
                     Exception::throwException(Exception::INVALID_ARGUMENT, "String: Invalid format specifier!");
             }

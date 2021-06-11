@@ -36,6 +36,7 @@
 #include <kernel/service/FilesystemService.h>
 #include <filesystem/memory/MemoryDriver.h>
 #include <lib/util/stream/FileInputStream.h>
+#include <kernel/memory/manager/TableMemoryManager.h>
 #include <kernel/core/Management.h>
 #include <device/time/Pit.h>
 #include "GatesOfHell.h"
@@ -81,8 +82,8 @@ void GatesOfHell::enter() {
     }
 
     if (Kernel::Multiboot::Structure::hasKernelOption("terminal_provider")) {
-        log.info("Terminal provider set to [%s] -> Starting initialization");
         auto providerName = Kernel::Multiboot::Structure::getKernelOption("terminal_provider");
+        log.info("Terminal provider set to [%s] -> Starting initialization", static_cast<const char*>(providerName));
         terminalProvider = reinterpret_cast<Device::Graphic::TerminalProvider*>(Util::Reflection::InstanceFactory::createInstance(providerName));
     } else if (lfbProvider != nullptr) {
         log.info("Terminal provider is not set -> Initializing terminal provider with LFB");
@@ -147,6 +148,29 @@ void GatesOfHell::enter() {
 
         delete[] bannerData;
     }
+
+    auto totalMemory = Kernel::Management::getInstance().getTotalPhysicalMemory();
+    auto tableMemoryManager = Kernel::TableMemoryManager(*Kernel::Management::getInstance().getPagingAreaManager(), 0, totalMemory - 1,4096);
+    tableMemoryManager.reserveMemory(0, 4095, 1);
+    tableMemoryManager.reserveMemory(8192, 10000, 1);
+    tableMemoryManager.reserveMemory(7.9 * 1024 * 1024, 8.1 * 1024 * 1024, 1);
+
+    void *test1 = tableMemoryManager.alloc();
+    void *test2 = tableMemoryManager.alloc();
+    void *test3 = tableMemoryManager.alloc();
+    void *test4 = tableMemoryManager.alloc();
+    void *test5 = tableMemoryManager.alloc();
+    void *test6 = tableMemoryManager.alloc();
+    void *test7 = tableMemoryManager.alloc();
+    void *test8 = tableMemoryManager.alloc();
+
+    tableMemoryManager.alloc(test1);
+    tableMemoryManager.alloc(test4);
+    tableMemoryManager.alloc(test7);
+
+    tableMemoryManager.free(test4);
+
+    tableMemoryManager.logTables();
 
     writer << "> " << Util::Stream::PrintWriter::flush;
 

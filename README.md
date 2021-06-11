@@ -62,7 +62,7 @@ hhuOS is able to boot on BIOS- as well as UEFI-based systems. To test both confi
 
 ### UEFI
 
-We use the [EDK2 OVMF](https://github.com/tianocore/edk2/tree/master/OvmfPkg) image to test hhuOS. The run script expects this image to be located at `/usr/share/edk2-ovmf/ia32/OVMF.fd`, but this can be adapted by setting the `OVMF` environment variable.
+We use the [EDK2 OVMF](https://github.com/tianocore/edk2/tree/master/OvmfPkg) image to test hhuOS. The run script expects this image to be located at `/usr/share/ovmf/ia32/OVMF.fd`, but this can be adapted by setting the `OVMF` environment variable.
 
 ### BIOS
 

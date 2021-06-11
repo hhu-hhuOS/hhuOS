@@ -24,16 +24,17 @@ namespace Kernel {
 
 IOMemoryManager::IOMemoryManager() : BitmapMemoryManager(VIRT_IO_START, VIRT_IO_END, PAGESIZE, false) {}
 
-void *IOMemoryManager::alloc(uint32_t size) {
+void *IOMemoryManager::alloc() {
 
     lock.acquire();
 
-    void *ret = BitmapMemoryManager::alloc(size);
+    void *ret = BitmapMemoryManager::alloc();
 
-    if (ret != nullptr) {
+    // TODO: Get rid of old IOMemoryManager
+    /*if (ret != nullptr) {
         uint32_t pageCount = (size / PAGESIZE) + ((size % PAGESIZE == 0) ? 0 : 1);
         ioMemoryMap.put(ret, pageCount);
-    }
+    }*/
 
     lock.release();
 

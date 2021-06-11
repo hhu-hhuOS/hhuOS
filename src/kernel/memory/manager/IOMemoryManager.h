@@ -61,7 +61,7 @@ public:
     /**
      * Overriding function from MemoryManager.
      */
-    void *alloc(uint32_t size) override;
+    void *alloc() override;
 
     /**
      * Overriding function from MemoryManager.

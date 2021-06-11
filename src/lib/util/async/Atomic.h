@@ -40,13 +40,13 @@ public:
 
     void set(T newValue);
 
-    T fetchAndAdd(T addend);
+    [[nodiscard]] T fetchAndAdd(T addend);
 
-    T fetchAndSub(T subtrahend);
+    [[nodiscard]] T fetchAndSub(T subtrahend);
 
-    T fetchAndInc();
+    [[nodiscard]] T fetchAndInc();
 
-    T fetchAndDec();
+    [[nodiscard]] T fetchAndDec();
 
     [[nodiscard]] bool bitTest(T index);
 

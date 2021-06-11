@@ -284,7 +284,7 @@ public:
      */
     void calcTotalPhysicalMemory();
 
-    uint32_t getTotalPhysicalMemory() {
+    [[nodiscard]] uint32_t getTotalPhysicalMemory() const {
         return totalPhysMemory;
     }
 

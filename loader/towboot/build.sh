@@ -1,6 +1,6 @@
 #!/bin/bash
 
-readonly CONST_TOWBOOT_VERSION="0.2.0"
+readonly CONST_TOWBOOT_VERSION="0.2.1"
 readonly CONST_PART_SECTORS="20480"
 
 if [ ! -f "towboot.efi" ]; then

@@ -24,14 +24,7 @@ BitmapMemoryManager::BitmapMemoryManager(uint32_t startAddress, uint32_t endAddr
         memoryStartAddress(startAddress), memoryEndAddress(endAddress), freeMemory(endAddress - startAddress),
         blockSize(blockSize), zeroMemory(zeroMemory), bitmap((endAddress - startAddress) / blockSize) {}
 
-void *BitmapMemoryManager::alloc(uint32_t size) {
-    if (size == 0) {
-        return nullptr;
-    }
-
-    // get count of blocks that corresponds to aligned size
-    uint32_t blockCount = (size / blockSize) + ((size % blockSize == 0) ? 0 : 1);
-
+void *BitmapMemoryManager::alloc() {
     uint32_t block = bitmap.findAndSet();
 
     if (block == bitmap.getSize()) {
@@ -39,12 +32,12 @@ void *BitmapMemoryManager::alloc(uint32_t size) {
         return nullptr;
     }
 
-    freeMemory -= blockSize * blockCount;
+    freeMemory -= blockSize;
 
     void *address = reinterpret_cast<void *>(memoryStartAddress + block * blockSize);
 
     if (zeroMemory) {
-        Util::Memory::Address<uint32_t>(address).setRange(0, blockCount * blockSize);
+        Util::Memory::Address<uint32_t>(address).setRange(0, blockSize);
     }
 
     return address;

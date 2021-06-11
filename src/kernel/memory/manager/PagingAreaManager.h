@@ -53,8 +53,15 @@ public:
      */
      ~PagingAreaManager() override = default;
 
-    void onError() override;
+     void* alloc() override;
 
+     void onError() override;
+
+     void refillPool();
+
+private:
+
+    static const constexpr uint32_t PAGE_POOL_SIZE = 8;
 };
 
 }

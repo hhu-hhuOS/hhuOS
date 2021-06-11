@@ -6,5 +6,5 @@ log_level = "info"
   [entries.hhuOS]
     name = "hhuOS"
     image = "\\hhuOS.bin"
-    argv = "log_level=info log_com_port=COM1"
+    argv = "log_level=debug log_com_port=COM1"
     modules = [ { image = "\\hhuOS.initrd", argv = "initrd" } ]

@@ -26,4 +26,5 @@ target_sources(kernel PUBLIC
         ${HHUOS_SRC_DIR}/kernel/memory/manager/HeapMemoryManager.cpp
         ${HHUOS_SRC_DIR}/kernel/memory/manager/IOMemoryManager.cpp
         ${HHUOS_SRC_DIR}/kernel/memory/manager/PageFrameAllocator.cpp
-        ${HHUOS_SRC_DIR}/kernel/memory/manager/PagingAreaManager.cpp)
+        ${HHUOS_SRC_DIR}/kernel/memory/manager/PagingAreaManager.cpp
+        ${HHUOS_SRC_DIR}/kernel/memory/manager/TableMemoryManager.cpp)
